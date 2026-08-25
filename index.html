@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>영어회화 핵심패턴 233</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+    </style>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="영어회화 233">
+    <meta name="theme-color" content="#4f46e5">
+    <style>
+        html, body { -webkit-text-size-adjust: 100%; overscroll-behavior-y: none; }
+        button, select { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+        .cursor-pointer { -webkit-user-select: none; user-select: none; }
+    </style>
+
+</head>
+<body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col justify-between">
+
+    <!-- Header -->
+    <header class="bg-indigo-600 text-white p-4 shadow-md">
+        <div class="max-w-md mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold flex items-center gap-2 cursor-pointer" onclick="showMainPage()">
+                <i class="fa-solid font-bold fa-language"></i> 영어회화 핵심패턴 233
+            </h1>
+            <span id="difficultCountBadge" class="bg-amber-400 text-amber-900 text-xs px-2.5 py-1 rounded-full font-bold">
+                어려운 문장: 0
+            </span>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-md w-full mx-auto p-4 flex-grow flex flex-col justify-center">
+
+        <!-- Page 1: Main Selection Page -->
+        <div id="mainPage" class="space-y-4">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-slate-700">학습 모드 선택</h2>
+                <p class="text-slate-500 text-sm mt-1">원하는 연습 모드를 선택해 주세요.</p>
+            </div>
+
+            <!-- Mode 1: All Practice -->
+            <button onclick="openSetupModal('all')" class="w-full bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition border border-slate-200 flex items-center justify-between group">
+                <div class="flex items-center space-x-4">
+                    <div class="p-3 bg-indigo-100 text-indigo-600 rounded-xl group-hover:bg-indigo-600 group-hover:text-white transition">
+                        <i class="fa-solid fa-layer-group text-2xl"></i>
+                    </div>
+                    <div class="text-left">
+                        <h3 class="font-bold text-lg text-slate-800">전체 연습</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">챕터와 문장 수를 선택하여 학습</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-slate-400"></i>
+            </button>
+
+            <!-- Mode 2: Difficult Sentences Practice -->
+            <button onclick="startDifficultPractice()" class="w-full bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition border border-slate-200 flex items-center justify-between group">
+                <div class="flex items-center space-x-4">
+                    <div class="p-3 bg-amber-100 text-amber-600 rounded-xl group-hover:bg-amber-500 group-hover:text-white transition">
+                        <i class="fa-solid fa-star text-2xl"></i>
+                    </div>
+                    <div class="text-left">
+                        <h3 class="font-bold text-lg text-slate-800">어려운 문장 연습</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">체크해둔 어렵거나 틀린 문장만 집중 복습</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-slate-400"></i>
+            </button>
+        </div>
+
+        <!-- Setup Modal/Page for Chapter & Count Selection -->
+        <div id="setupPage" class="hidden bg-white p-6 rounded-2xl shadow-md border border-slate-200 space-y-6">
+            <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-sliders text-indigo-600"></i> 학습 설정
+            </h2>
+
+            <!-- Chapter Selection -->
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-2">공부할 챕터 선택 (다중 선택 가능)</label>
+                <div id="chapterList" class="space-y-2 max-h-40 overflow-y-auto pr-1">
+                    <!-- Chapters injected dynamically -->
+                </div>
+            </div>
+
+            <!-- Sentence Count Selection -->
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-2">학습할 문장 개수</label>
+                <select id="sentenceCountSelect" class="w-full border border-slate-300 rounded-xl p-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="5">5개</option>
+                    <option value="10" selected>10개</option>
+                    <option value="20">20개</option>
+                    <option value="all">전체</option>
+                </select>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex space-x-3 pt-2">
+                <button onclick="showMainPage()" class="w-1/3 py-3 border border-slate-300 rounded-xl text-slate-600 font-semibold hover:bg-slate-50 transition">
+                    취소
+                </button>
+                <button onclick="startAllPractice()" class="w-2/3 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition">
+                    학습 시작
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 2: Study Card Interface -->
+        <div id="studyPage" class="hidden flex flex-col space-y-4">
+
+            <!-- Progress & Controls Top Bar -->
+            <div class="flex justify-between items-center text-sm text-slate-500 px-1">
+                <button onclick="showMainPage()" class="hover:text-slate-800 flex items-center gap-1">
+                    <i class="fa-solid fa-arrow-left"></i> 처음으로
+                </button>
+                <span id="progressText" class="font-semibold text-indigo-600">1 / 10</span>
+                <button id="starBtn" onclick="toggleDifficult()" class="text-xl text-slate-300 hover:text-amber-400 transition">
+                    <i class="fa-solid fa-star"></i>
+                </button>
+            </div>
+
+            <!-- Card Container -->
+            <div class="perspective-1000 w-full h-80 cursor-pointer" onclick="flipCard()">
+                <div id="cardInner" class="relative w-full h-full duration-500 transform-style-3d shadow-lg rounded-2xl bg-white border border-slate-200">
+                    
+                    <!-- Front Side (Korean Meaning) -->
+                    <div class="absolute w-full h-full backface-hidden p-6 flex flex-col justify-between items-center bg-white rounded-2xl">
+                        <span class="text-xs font-semibold px-2.5 py-1 bg-slate-100 text-slate-500 rounded-full">뜻</span>
+                        <div class="text-center my-auto">
+                            <p id="cardFrontText" class="text-2xl font-bold text-slate-800 leading-snug">
+                                한국어 뜻이 표기됩니다.
+                            </p>
+                        </div>
+                        <p class="text-xs text-slate-400 flex items-center gap-1">
+                            <i class="fa-solid fa-rotate text-indigo-400"></i> 카드를 눌러 영어 문장 확인
+                        </p>
+                    </div>
+
+                    <!-- Back Side (English Sentence) -->
+                    <div class="absolute w-full h-full backface-hidden rotate-y-180 p-6 flex flex-col justify-between items-center bg-indigo-50 border-2 border-indigo-200 rounded-2xl">
+                        <span class="text-xs font-semibold px-2.5 py-1 bg-indigo-100 text-indigo-700 rounded-full">영어</span>
+                        <div class="text-center my-auto">
+                            <p id="cardBackText" class="text-2xl font-bold text-indigo-900 leading-snug">
+                                English sentence here.
+                            </p>
+                        </div>
+                        <p class="text-xs text-indigo-400 flex items-center gap-1">
+                            <i class="fa-solid fa-rotate"></i> 카드를 눌러 뜻 확인
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex space-x-3 pt-2">
+                <button onclick="prevCard()" class="w-1/2 py-3 bg-white border border-slate-300 rounded-xl text-slate-700 font-semibold hover:bg-slate-50 transition shadow-sm flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-chevron-left"></i> 이전
+                </button>
+                <button onclick="nextCard()" class="w-1/2 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition shadow-sm flex justify-center items-center gap-2">
+                    다음 <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <!-- Separate Dimmed Pattern Indicator Below Navigation -->
+            <div class="pt-2 text-center opacity-60">
+                <span class="text-[11px] font-medium text-slate-400 block mb-0.5">패턴</span>
+                <p id="patternText" class="text-xs font-normal text-slate-500">
+                    -
+                </p>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center p-4 text-xs text-slate-400 font-medium">
+        made by Nacho
+    </footer>
+
+    <script>
+        // Sample dataset populated from provided document
+        const dataset = [
+            // Chapter 1 Items
+            { id: 1, chapter: 1, pattern: "I'm kind of/ 좀~해요", en: "I'm kind of tired", ko: "나 좀 피곤해" },
+            { id: 2, chapter: 1, pattern: "I'm kind of/ 좀~해요", en: "I'm kind of excited", ko: "나 좀 흥분돼" },
+            { id: 3, chapter: 1, pattern: "I'm kind of/ 좀~해요", en: "I'm kind of happy", ko: "나 좀 행복해" },
+            { id: 4, chapter: 1, pattern: "I'm kind of/ 좀~해요", en: "I'm kind of nervous", ko: "나 좀 긴장돼" },
+            { id: 5, chapter: 1, pattern: "I'm kind of/ 좀~해요", en: "I'm kind of jealous", ko: "나 좀 질투나" },
+            { id: 6, chapter: 1, pattern: "I'm here to ~/~하러 왔어요", en: "I'm here to talk to you", ko: "당신과 얘기하러 왔어요" },
+            { id: 7, chapter: 1, pattern: "I'm here to ~/~하러 왔어요", en: "I'm here to study", ko: "공부하러 왔어요" },
+            { id: 8, chapter: 1, pattern: "I'm here to ~/~하러 왔어요", en: "I'm here to work", ko: "일하러 왔어요" },
+            { id: 9, chapter: 1, pattern: "I'm here to ~/~하러 왔어요", en: "I'm here to help", ko: "도와주러 왔어요" },
+            { id: 10, chapter: 1, pattern: "I'm here to ~/~하러 왔어요", en: "I'm here to relax", ko: "쉬러 왔어요" },
+            { id: 11, chapter: 1, pattern: "I'm about to~/~하려던 참이에요", en: "I'm about to get going", ko: "가려던 참이에요" },
+            { id: 12, chapter: 1, pattern: "I'm about to~/~하려던 참이에요", en: "I'm about to head out", ko: "나가려던 참이에요" },
+            { id: 13, chapter: 1, pattern: "I'm about to~/~하려던 참이에요", en: "I'm about to go to bed", ko: "자려던 참이에요" },
+            { id: 14, chapter: 1, pattern: "I'm about to~/~하려던 참이에요", en: "I'm about to finish up", ko: "끝내려던 참이에요" },
+            { id: 15, chapter: 1, pattern: "I'm about to~/~하려던 참이에요", en: "I'm about to be upset", ko: "화가 나려던 참이에요" },
+            { id: 16, chapter: 1, pattern: "I'm dying to ~/ 정말 ~하고 싶어요", en: "I'm dying to see you", ko: "정말 당신이 보고싶어요" },
+            { id: 17, chapter: 1, pattern: "I'm dying to ~/ 정말 ~하고 싶어요", en: "I'm dying to get one", ko: "정말 하나 갖고싶어요" },
+            { id: 18, chapter: 1, pattern: "I'm dying to ~/ 정말 ~하고 싶어요", en: "I'm dying to give it a shot", ko: "정말 한번 시도해보고 싶어요" },
+            { id: 19, chapter: 1, pattern: "I'm dying to ~/ 정말 ~하고 싶어요", en: "I'm dying to taste that", ko: "정말 그걸 맛보고 싶어요" },
+            { id: 20, chapter: 1, pattern: "I'm dying to ~/ 정말 ~하고 싶어요", en: "I'm dying to see that movie", ko: "정말 그 영화 보고 싶어요" },
+            { id: 21, chapter: 1, pattern: "I'm okay with ~/~이 괜찮아요", en: "I'm okay with anything", ko: "아무거나 괜찮아요" },
+            { id: 22, chapter: 1, pattern: "I'm okay with ~/~이 괜찮아요", en: "I'm okay with the plan", ko: "그 계획 괜찮아요" },
+            { id: 23, chapter: 1, pattern: "I'm okay with ~/~이 괜찮아요", en: "I'm okay with whatever you choose", ko: "당신이 뭘 선택하든 괜찮아요" },
+            { id: 24, chapter: 1, pattern: "I'm okay with ~/~이 괜찮아요", en: "I'm okay with being alone", ko: "혼자 있어도 괜찮아요" },
+            { id: 25, chapter: 1, pattern: "I'm okay with ~/~이 괜찮아요", en: "I'm okay with how it turned out", ko: "결과가 어떻게 됐든 괜찮아요" },
+            { id: 26, chapter: 1, pattern: "I'm ready to ~ / ~할 준비 됐어요.", en: "I'm ready to go", ko: "갈 준비 됐어요" },
+            { id: 27, chapter: 1, pattern: "I'm ready to ~ / ~할 준비 됐어요.", en: "I'm ready to order", ko: "주문할 준비 됐어요" },
+            { id: 28, chapter: 1, pattern: "I'm ready to ~ / ~할 준비 됐어요.", en: "I'm ready to start", ko: "시작할 준비 됐어요" },
+            { id: 29, chapter: 1, pattern: "I'm ready to ~ / ~할 준비 됐어요.", en: "I'm ready to go home", ko: "집에 갈 준비 됐어요" },
+            { id: 30, chapter: 1, pattern: "I'm ready to ~ / ~할 준비 됐어요.", en: "I'm ready to make a choice", ko: "선택할 준비 됐어요" },
+            { id: 31, chapter: 1, pattern: "I'm good at ~/~을 잘해요", en: "I'm good at tennis", ko: "전 테니스를 잘 쳐요" },
+            { id: 32, chapter: 1, pattern: "I'm good at ~/~을 잘해요", en: "I'm good at writing", ko: "전 글쓰기를 잘해요" },
+            { id: 33, chapter: 1, pattern: "I'm good at ~/~을 잘해요", en: "I'm good at math", ko: "전 수학을 잘해요" },
+            { id: 34, chapter: 1, pattern: "I'm good at ~/~을 잘해요", en: "I'm good at directions", ko: "전 방향을 잘 알아요" },
+            { id: 35, chapter: 1, pattern: "I'm good at ~/~을 잘해요", en: "I'm good at figuring things out", ko: "전 잘 파악해요" },
+            { id: 36, chapter: 1, pattern: "I'm on~/~중이에요", en: "I'm on my way now", ko: "지금 가는 중이에요" },
+            { id: 37, chapter: 1, pattern: "I'm on~/~중이에요", en: "I'm on my way there", ko: "그곳에 가는 중이에요" },
+            { id: 38, chapter: 1, pattern: "I'm on~/~중이에요", en: "I'm on vacation", ko: "휴가중이에요" },
+            { id: 39, chapter: 1, pattern: "I'm on~/~중이에요", en: "I'm on it", ko: "지금 하고 있는 중이에요" },
+            { id: 40, chapter: 1, pattern: "I'm on~/~중이에요", en: "I'm on medicine", ko: "약을 먹고 있는 중이에요" },
+            { id: 41, chapter: 1, pattern: "I'm happy with ~/~에 만족해요", en: "I'm happy with my new job", ko: "새 직장에 만족해요" },
+            { id: 42, chapter: 1, pattern: "I'm happy with ~/~에 만족해요", en: "I'm happy with my life", ko: "제 생활에 만족해요" },
+            { id: 43, chapter: 1, pattern: "I'm happy with ~/~에 만족해요", en: "I'm happy with my choice", ko: "제 선택에 만족해요" },
+            { id: 44, chapter: 1, pattern: "I'm happy with ~/~에 만족해요", en: "I'm happy with everything", ko: "모든 것에 만족해요" },
+            { id: 45, chapter: 1, pattern: "I'm happy with ~/~에 만족해요", en: "I'm happy with where I live", ko: "지금 살고 있는 곳에 만족해요" },
+
+            // Chapter 2 Items
+            { id: 46, chapter: 2, pattern: "Do you like ~/~을 좋아해요?", en: "Do you like classical music?", ko: "클래식 음악 좋아해요?" },
+            { id: 47, chapter: 2, pattern: "Do you like ~/~을 좋아해요?", en: "Do you like her?", ko: "그녀를 좋아해요?" },
+            { id: 48, chapter: 2, pattern: "Do you like ~/~을 좋아해요?", en: "Do you like your job?", ko: "너의 직업을 좋아해요?" },
+            { id: 49, chapter: 2, pattern: "Do you like ~/~을 좋아해요?", en: "Do you like the color blue?", ko: "파란색 좋아해요?" },
+            { id: 50, chapter: 2, pattern: "Do you like ~/~을 좋아해요?", en: "Do you like going to the movies?", ko: "영화보러 가는 거 좋아해요?" },
+            { id: 51, chapter: 2, pattern: "Do you know~/~을 알아요?", en: "Do you know me?", ko: "절 아세요?" },
+            { id: 52, chapter: 2, pattern: "Do you know~/~을 알아요?", en: "Do you know each other?", ko: "서로 아는 사이에요?" },
+            { id: 53, chapter: 2, pattern: "Do you know~/~을 알아요?", en: "Do you know anything about him?", ko: "그에 대해 뭐 아세요?" },
+            { id: 54, chapter: 2, pattern: "Do you know~/~을 알아요?", en: "Do you know what time is it?", ko: "몇 시 인지 아세요?" },
+            { id: 55, chapter: 2, pattern: "Do you know~/~을 알아요?", en: "Do you know who she is?", ko: "그녀가 누군지 알아요?" },
+            { id: 56, chapter: 2, pattern: "Do you want to ~/~하시겠어요?", en: "Do you want to grab a bite to eat?", ko: "뭐 좀 드시겠어요?" },
+            { id: 57, chapter: 2, pattern: "Do you want to ~/~하시겠어요?", en: "Do you want to help me?", ko: "저 좀 도와주시겠어요?" },
+            { id: 58, chapter: 2, pattern: "Do you want to ~/~하시겠어요?", en: "Do you want to get a drink?", ko: "한잔 할래요?" },
+            { id: 59, chapter: 2, pattern: "Do you want to ~/~하시겠어요?", en: "Do you want to dance?", ko: "춤출래요?" },
+            { id: 60, chapter: 2, pattern: "Do you want to ~/~하시겠어요?", en: "Do you want to watch TV?", ko: "TV 볼래요?" },
+            { id: 61, chapter: 2, pattern: "Do you feel like ~ / ~하고 싶어요?", en: "Do you feel like a drink?", ko: "한잔 하고 싶어요?" },
+            { id: 62, chapter: 2, pattern: "Do you feel like ~ / ~하고 싶어요?", en: "Do you feel like eating something?", ko: "뭐 좀 먹고 싶어요?" },
+            { id: 63, chapter: 2, pattern: "Do you feel like ~ / ~하고 싶어요?", en: "Do you feel like staying home?", ko: "집에 있고 싶어요?" },
+            { id: 64, chapter: 2, pattern: "Do you feel like ~ / ~하고 싶어요?", en: "Do you feel like going out?", ko: "나가고 싶어요?" },
+            { id: 65, chapter: 2, pattern: "Do you feel like ~ / ~하고 싶어요?", en: "Do you feel like getting lunch?", ko: "점심 먹을래요?" },
+            { id: 66, chapter: 2, pattern: "Do you think ~/~라고 생각해요?", en: "Do you think I am stupid?", ko: "내가 바보같아?" },
+            { id: 67, chapter: 2, pattern: "Do you think ~/~라고 생각해요?", en: "Do you think it's right?", ko: "그게 맞다고 생각해?" },
+            { id: 68, chapter: 2, pattern: "Do you think ~/~라고 생각해요?", en: "Do you think this looks okay?", ko: "이게 괜찮아 보여?" },
+            { id: 69, chapter: 2, pattern: "Do you think ~/~라고 생각해요?", en: "Do you think I should buy it?", ko: "내가 이걸 사야할까?" },
+            { id: 70, chapter: 2, pattern: "Do you think ~/~라고 생각해요?", en: "Do you think he'll call me?", ko: "그가 나한테 전화를 할까?" },
+            { id: 71, chapter: 2, pattern: "Do you need ~/~가 필요해요?", en: "Do you need some money?", ko: "돈 좀 필요해?" },
+            { id: 72, chapter: 2, pattern: "Do you need ~/~가 필요해요?", en: "Do you need help?", ko: "도와줄까?" },
+            { id: 73, chapter: 2, pattern: "Do you need ~/~가 필요해요?", en: "Do you need a ride?", ko: "태워줄까?" },
+            { id: 74, chapter: 2, pattern: "Do you need ~/~가 필요해요?", en: "Do you need a date for the party?", ko: "파티에 같이 갈 상대가 필요해?" },
+            { id: 75, chapter: 2, pattern: "Do you need ~/~가 필요해요?", en: "Do you need some more time?", ko: "시간이 더 필요해?" },
+            { id: 76, chapter: 2, pattern: "Do you remember ~/~가 기억나?", en: "Do you remember me?", ko: "나 기억해?" },
+            { id: 77, chapter: 2, pattern: "Do you remember ~/~가 기억나?", en: "Do you remember the name of the restaurant?", ko: "식당 이름 기억나?" },
+            { id: 78, chapter: 2, pattern: "Do you remember ~/~가 기억나?", en: "Do you remember who that is?", ko: "그게 누군지 기억나?" },
+            { id: 79, chapter: 2, pattern: "Do you remember ~/~가 기억나?", en: "Do you remember what time it starts?", ko: "언제 시작하는지 기억나?" },
+            { id: 80, chapter: 2, pattern: "Do you remember ~/~가 기억나?", en: "Do you remember how to do this?", ko: "이거 어떻게 하는지 기억나?" },
+
+            // Chapter 3 Items
+            { id: 81, chapter: 3, pattern: "I thought ~ / ~인 줄 알았어요", en: "I thought you left already.", ko: "당신이 이미 떠난 줄 알았어요." },
+            { id: 82, chapter: 3, pattern: "I thought ~ / ~인 줄 알았어요", en: "I thought you already ate.", ko: "당신이 이미 먹었는 줄 알았어요." },
+            { id: 83, chapter: 3, pattern: "I thought ~ / ~인 줄 알았어요", en: "I thought you didn't like pizza.", ko: "당신이 피자를 안 좋아하는 줄 알았어요." },
+            { id: 84, chapter: 3, pattern: "I thought ~ / ~인 줄 알았어요", en: "I thought you would need this.", ko: "당신이 이게 필요할 줄 알았어요." },
+            { id: 85, chapter: 3, pattern: "I thought ~ / ~인 줄 알았어요", en: "I thought you were at work.", ko: "당신이 근무중인 줄 알았어요." },
+            { id: 86, chapter: 3, pattern: "I'm thinking about ~ / ~할까 생각 중이에요", en: "I'm thinking about buying an iPhone.", ko: "아이폰을 살까 생각 중이에요." },
+            { id: 87, chapter: 3, pattern: "I'm thinking about ~ / ~할까 생각 중이에요", en: "I'm thinking about moving.", ko: "이사할까 생각 중이에요." },
+            { id: 88, chapter: 3, pattern: "I'm thinking about ~ / ~할까 생각 중이에요", en: "I'm thinking about quitting my job.", ko: "일을 그만둘까 생각 중이에요." },
+            { id: 89, chapter: 3, pattern: "I'm thinking about ~ / ~할까 생각 중이에요", en: "I'm thinking about going back to school.", ko: "복학할까 생각 중이에요." },
+            { id: 90, chapter: 3, pattern: "I'm thinking about ~ / ~할까 생각 중이에요", en: "I'm thinking about leaving my husband.", ko: "남편과 헤어질까 생각 중이에요." },
+            { id: 91, chapter: 3, pattern: "I think I've got ~ / ~인 것 같아요", en: "I think I've got the wrong idea.", ko: "제가 잘못 생각했던 것 같아요." },
+            { id: 92, chapter: 3, pattern: "I think I've got ~ / ~인 것 같아요", en: "I think I've got a minute.", ko: "잠깐 시간이 될 것 같아요." },
+            { id: 93, chapter: 3, pattern: "I think I've got ~ / ~인 것 같아요", en: "I think I've got a cold.", ko: "감기에 걸린 것 같아요." },
+            { id: 94, chapter: 3, pattern: "I think I've got ~ / ~인 것 같아요", en: "I think I've got a bad impression.", ko: "제가 나쁜 인상을 받은 것 같아요." },
+            { id: 95, chapter: 3, pattern: "I think I've got ~ / ~인 것 같아요", en: "I think I've got what you need.", ko: "당신이 필요한 거 저한테 있는 것 같아요." },
+            { id: 96, chapter: 3, pattern: "I think we should ~ / 우리 ~해야 할 것 같아요", en: "I think we should talk about it.", ko: "우리 그것에 대해 얘기해봐야 할 것 같아요." },
+            { id: 97, chapter: 3, pattern: "I think we should ~ / 우리 ~해야 할 것 같아요", en: "I think we should listen to him.", ko: "우리 그 사람 말을 들어야 할 것 같아요." },
+            { id: 98, chapter: 3, pattern: "I think we should ~ / 우리 ~해야 할 것 같아요", en: "I think we should wait and see.", ko: "기다리면서 상황을 좀 봐야 할 것 같아요." },
+            { id: 99, chapter: 3, pattern: "I think we should ~ / 우리 ~해야 할 것 같아요", en: "I think we should ask for directions.", ko: "우리 방향을 물어봐야 할 것 같아요." },
+            { id: 100, chapter: 3, pattern: "I think we should ~ / 우리 ~해야 할 것 같아요", en: "I think we should make sure.", ko: "우리 확인해봐야 할 것 같아요." },
+            { id: 101, chapter: 3, pattern: "I think I'm going to ~ / ~할 것 같아요", en: "I think I'm going to give up.", ko: "포기할 것 같아요." },
+            { id: 102, chapter: 3, pattern: "I think I'm going to ~ / ~할 것 같아요", en: "I think I'm going to decide soon.", ko: "곧 결정할 것 같아요." },
+            { id: 103, chapter: 3, pattern: "I think I'm going to ~ / ~할 것 같아요", en: "I think I'm going to get a puppy.", ko: "강아지를 살 것 같아요." },
+            { id: 104, chapter: 3, pattern: "I think I'm going to ~ / ~할 것 같아요", en: "I think I'm going to take a trip.", ko: "여행을 갈 것 같아요." },
+            { id: 105, chapter: 3, pattern: "I think I'm going to ~ / ~할 것 같아요", en: "I think I'm going to quit my job.", ko: "일을 그만둘 것 같아요." },
+            { id: 106, chapter: 3, pattern: "I don't think ~ / ~인 것 같지 않아요", en: "I don't think it's the right choice.", ko: "올바른 선택이 아닌 것 같아요." },
+            { id: 107, chapter: 3, pattern: "I don't think ~ / ~인 것 같지 않아요", en: "I don't think it makes sense.", ko: "말이 안 되는 것 같아요." },
+            { id: 108, chapter: 3, pattern: "I don't think ~ / ~인 것 같지 않아요", en: "I don't think that looks good on you.", ko: "그거 당신한테 안 어울리는 것 같아요." },
+            { id: 109, chapter: 3, pattern: "I don't think ~ / ~인 것 같지 않아요", en: "I don't think that is necessary.", ko: "그건 필요 없을 것 같아요." },
+            { id: 110, chapter: 3, pattern: "I don't think ~ / ~인 것 같지 않아요", en: "I don't think you can do that.", ko: "당신이 할 수 없을 것 같아요." },
+            { id: 111, chapter: 3, pattern: "I think ~ / ~인 것 같아요", en: "I think I saw him before.", ko: "전에 저 사람 본 것 같아요." },
+            { id: 112, chapter: 3, pattern: "I think ~ / ~인 것 같아요", en: "I think we should get going.", ko: "우리 가봐야 할 것 같아요." },
+            { id: 113, chapter: 3, pattern: "I think ~ / ~인 것 같아요", en: "I think we're almost there.", ko: "우리 거의 다 온 것 같아요." },
+            { id: 114, chapter: 3, pattern: "I think ~ / ~인 것 같아요", en: "I think you're right.", ko: "당신이 맞는 것 같아요." },
+            { id: 115, chapter: 3, pattern: "I think ~ / ~인 것 같아요", en: "I think he's mad at me.", ko: "그가 나한테 열 받은 것 같아요." }
+        ];
+
+        // State variables
+        let difficultSentenceIds = JSON.parse(localStorage.getItem('difficultSentences') || '[]');
+        let currentQueue = [];
+        let currentIndex = 0;
+        let isFlipped = false;
+
+        // Initialize UI
+        updateBadge();
+
+        function updateBadge() {
+            document.getElementById('difficultCountBadge').textContent = `어려운 문장: ${difficultSentenceIds.length}`;
+        }
+
+        function showMainPage() {
+            document.getElementById('mainPage').classList.remove('hidden');
+            document.getElementById('setupPage').classList.add('hidden');
+            document.getElementById('studyPage').classList.add('hidden');
+            updateBadge();
+        }
+
+        // Open Setup Modal
+        function openSetupModal() {
+            document.getElementById('mainPage').classList.add('hidden');
+            document.getElementById('setupPage').classList.remove('hidden');
+
+            const chapters = [...new Set(dataset.map(item => item.chapter))].sort((a,b) => a - b);
+            const chapterListEl = document.getElementById('chapterList');
+            chapterListEl.innerHTML = '';
+
+            chapters.forEach(ch => {
+                const label = document.createElement('label');
+                label.className = 'flex items-center space-x-3 p-2 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer';
+                label.innerHTML = `
+                    <input type="checkbox" value="${ch}" class="chapter-checkbox rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4" checked>
+                    <span class="text-sm font-medium text-slate-700">Chapter ${ch}</span>
+                `;
+                chapterListEl.appendChild(label);
+            });
+        }
+
+        // Utility: Fisher-Yates Shuffle
+        function shuffle(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex != 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        // Mode 1: Start All Practice
+        function startAllPractice() {
+            const checkedBoxes = document.querySelectorAll('.chapter-checkbox:checked');
+            const selectedChapters = Array.from(checkedBoxes).map(cb => parseInt(cb.value));
+
+            if (selectedChapters.length === 0) {
+                alert('최소 하나 이상의 챕터를 선택해 주세요.');
+                return;
+            }
+
+            let filtered = dataset.filter(item => selectedChapters.includes(item.chapter));
+            
+            // Randomize sentence order
+            filtered = shuffle([...filtered]);
+
+            // Sentence Count
+            const countVal = document.getElementById('sentenceCountSelect').value;
+            if (countVal !== 'all') {
+                const count = parseInt(countVal);
+                filtered = filtered.slice(0, count);
+            }
+
+            if (filtered.length === 0) {
+                alert('해당하는 문장이 없습니다.');
+                return;
+            }
+
+            currentQueue = filtered;
+            currentIndex = 0;
+            launchStudySession();
+        }
+
+        // Mode 2: Start Difficult Practice
+        function startDifficultPractice() {
+            if (difficultSentenceIds.length === 0) {
+                alert('어려운 문장으로 등록된 항목이 없습니다.');
+                return;
+            }
+
+            let filtered = dataset.filter(item => difficultSentenceIds.includes(item.id));
+            
+            // Randomize sentence order
+            currentQueue = shuffle([...filtered]);
+            currentIndex = 0;
+
+            launchStudySession();
+        }
+
+        // Launch Flashcard Screen
+        function launchStudySession() {
+            document.getElementById('mainPage').classList.add('hidden');
+            document.getElementById('setupPage').classList.add('hidden');
+            document.getElementById('studyPage').classList.remove('hidden');
+
+            renderCurrentCard();
+        }
+
+        // Render Current Card
+        function renderCurrentCard() {
+            const card = currentQueue[currentIndex];
+            if (!card) return;
+
+            // Reset Flip State
+            isFlipped = false;
+            document.getElementById('cardInner').classList.remove('rotate-y-180');
+
+            // Set Content (Korean front, English back)
+            document.getElementById('cardFrontText').textContent = card.ko;
+            document.getElementById('cardBackText').textContent = card.en;
+
+            // Set Pattern text (separate indicator below card)
+            document.getElementById('patternText').textContent = card.pattern || '-';
+
+            // Update Progress
+            document.getElementById('progressText').textContent = `${currentIndex + 1} / ${currentQueue.length}`;
+
+            // Update Star Icon
+            updateStarUI(card.id);
+        }
+
+        function flipCard() {
+            isFlipped = !isFlipped;
+            const cardInner = document.getElementById('cardInner');
+            if (isFlipped) {
+                cardInner.classList.add('rotate-y-180');
+            } else {
+                cardInner.classList.remove('rotate-y-180');
+            }
+        }
+
+        function prevCard() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderCurrentCard();
+            }
+        }
+
+        function nextCard() {
+            if (currentIndex < currentQueue.length - 1) {
+                currentIndex++;
+                renderCurrentCard();
+            } else {
+                alert('모든 학습 문장을 완료했습니다!');
+                showMainPage();
+            }
+        }
+
+        // Toggle Difficult Sentence Check
+        function toggleDifficult() {
+            const currentItem = currentQueue[currentIndex];
+            if (!currentItem) return;
+
+            const id = currentItem.id;
+            const index = difficultSentenceIds.indexOf(id);
+
+            if (index > -1) {
+                difficultSentenceIds.splice(index, 1);
+            } else {
+                difficultSentenceIds.push(id);
+            }
+
+            localStorage.setItem('difficultSentences', JSON.stringify(difficultSentenceIds));
+            updateStarUI(id);
+            updateBadge();
+        }
+
+        function updateStarUI(id) {
+            const starBtn = document.getElementById('starBtn');
+            if (difficultSentenceIds.includes(id)) {
+                starBtn.className = 'text-xl text-amber-400 transition';
+            } else {
+                starBtn.className = 'text-xl text-slate-300 hover:text-amber-400 transition';
+            }
+        }
+    </script>
+</body>
+</html>

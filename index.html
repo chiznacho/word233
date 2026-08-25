@@ -500,10 +500,14 @@
 
         function updateStarUI(id) {
             const starBtn = document.getElementById('starBtn');
+            const starIcon = starBtn.querySelector('i');
+            
             if (difficultSentenceIds.includes(id)) {
                 starBtn.className = 'text-xl text-amber-400 transition';
+                if (starIcon) starIcon.className = 'fa-solid fa-star text-amber-400';
             } else {
                 starBtn.className = 'text-xl text-slate-300 hover:text-amber-400 transition';
+                if (starIcon) starIcon.className = 'fa-solid fa-star text-slate-300';
             }
         }
     </script>
